@@ -6,7 +6,45 @@ namespace matrix_prod_cs
     {
         public static void OnMult(int m_ar, int m_br)
         {
+            double[] pha = new double[m_ar * m_ar];
+            double[] phb = new double[m_ar * m_ar];
+            double[] phc = new double[m_ar * m_ar];
 
+            for (uint i = 0; i < m_ar; i++)
+                for (uint j = 0; j < m_ar; j++)
+                    pha[i * m_ar + j] = 1;
+
+            for (uint i = 0; i < m_br; i++)
+                for (uint j = 0; j < m_br; j++)
+                    phb[i * m_br + j] = i + 1;
+
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+
+            for (uint i = 0; i < m_ar; i++)
+            {
+                for (uint j = 0; j < m_br; j++)
+                {
+                    double temp = 0;
+
+                    for (uint k = 0; k < m_ar; k++)
+                        temp += pha[i * m_ar + k] * phb[k * m_br + j];
+
+                    phc[i * m_ar + j] = temp;
+                }
+            }
+
+            watch.Stop();
+
+            double elapsedSeconds = watch.ElapsedMilliseconds / 1000.0;
+            Console.WriteLine("Time: {0:F3} seconds", elapsedSeconds);
+
+            Console.WriteLine("Result matrix:");
+
+            for (uint i = 0; i < 1; i++)
+                for (uint j = 0; j < Math.Min(10, m_br); j++)
+                    Console.Write(phc[j] + " ");
+
+            Console.WriteLine();
         }
 
         public static void OnMultLine(int m_ar, int m_br)
@@ -72,10 +110,9 @@ namespace matrix_prod_cs
                     Console.WriteLine("Error: non-numeric input is unsupported, try again.");
                     op = 1;
                 }
-
-                Console.WriteLine();
-
             } while (op != 0);
+
+            Console.WriteLine();
         }
     }
 }
