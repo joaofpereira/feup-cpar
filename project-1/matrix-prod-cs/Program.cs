@@ -44,5 +44,60 @@ namespace matrix_prod_cs
                 Console.WriteLine();
             } while (op != 0);
         }
+        
+        
+            void OnMultLine(int lines, int columns)
+            {
+                double[] matrixA = new double[lines*columns], matrixB = new double[lines*columns], matrixResult = new double[lines*columns];
+                
+                // initialize matrix values of matrix A
+                for(int i = 0; i < lines; i++)
+                {
+                    for(int j = 0; j < lines; j++)
+                    {
+                        matrixA[i*lines + j] = 1.0;
+                    }
+                }
+                
+                printMatrix(matrixA, lines, columns);
+                
+                // initialize matrix values of matrix B
+                for(int i = 0; i < columns; i++)
+                {
+                    for(int j = 0; j < columns; j++)
+                    {
+                        matrixB[i*columns + j] = 1.0;
+                    }
+                }
+                
+                printMatrix(matrixB, lines, columns);
+                
+                for(int i = 0; i < lines; i++)
+                {
+                    for(int j = 0; j < columns; j++)
+                    {
+                        for(int k = 0; k < lines; k++)
+                        {
+                            matrixResult[i*lines + j] = matrixA[i*lines + k] * matrixB[k*columns + j];
+                        }
+                    }
+                }
+                
+                printMatrix(matrixResult, lines, columns);
+            }
+            
+            void printMatrix(double[] matrix, int lines, int columns)
+            {
+                for(int i = 0; i < columns; i++)
+                {
+                    for(int j = 0; j < lines; j++)
+                    {
+                        Console.Write(matrix[i*columns + j].ToString());
+                    }
+                    
+                    Console.WriteLine();
+                }
+
+            }
     }
 }
