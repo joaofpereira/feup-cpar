@@ -180,7 +180,7 @@ void OnMultLine(int m_ar, int m_br)
 		for(j=0; j<min(10,m_br); j++)
 			cout << phc[j] << " ";			// Print at most 10 elems of first line of Final Matrix
 	}
-	//cout << endl;*/
+	//cout << endl; */
 
 	free(pha);		// Free Matrix A allocated Memory
 	free(phb);		// Free Matrix B allocated Memory
@@ -281,10 +281,11 @@ void init_papi()
 
 void printMenu()
 {
-	cout << endl << "1. Multiplication Single thread" << endl;
-	cout << "2. Multiplication Multi thread (OpenMP)" << endl;
-	cout << "3. Multiplication V2 Single thread" << endl;
-	cout << "4. Multiplication V2 Multi thread (OpenMP)" << endl << endl;
+	cout << endl << "1. Multiplication Single thread (600-3000)" << endl;
+	cout << "2. Multiplication Multi thread (OpenMP) (600-3000)" << endl;
+	cout << "3. Multiplication V2 Single thread (600-3000)" << endl;
+	cout << "4. Multiplication V2 Single thread (4000-10000)" << endl;
+	cout << "5. Multiplication V2 Multi thread (OpenMP)(600-3000)" << endl << endl;
 	cout << "Selection?: ";
 }
 
@@ -298,7 +299,7 @@ int main (int argc, char *argv[])
 	int threadsCount;			// Number of working threads
 	
 	int EventSet = PAPI_NULL;	// PAPI func arg (ref)
-	long long values[2];		// L1 & L2 DCM
+	long long values[4];		// L1 & L2 DCM
 	int ret;					// PAPI func return val
 
 	// ------  Some Infos  ------
@@ -318,6 +319,12 @@ int main (int argc, char *argv[])
 
 	ret = PAPI_add_event(EventSet,PAPI_L2_DCM);					// Capture L2 DCM
 	if (ret != PAPI_OK) cout << "ERRO: PAPI_L2_DCM" << endl;
+
+	ret = PAPI_add_event(EventSet,PAPI_L1_ICM);					// Capture L1 ICM
+	if (ret != PAPI_OK) cout << "ERRO: PAPI_L1_ICM" << endl;
+
+	ret = PAPI_add_event(EventSet,PAPI_L2_ICM);					// Capture L2 ICM
+	if (ret != PAPI_OK) cout << "ERRO: PAPI_L2_ICM" << endl;
 
 	/*
 	op = 1;
@@ -401,7 +408,7 @@ int main (int argc, char *argv[])
 				else if(threadsCount > nthreads)
 					threadsCount = nthreads;
 				cout << "Working threads: " << threadsCount << endl;
-				cout << endl << "Dimension\t Time(s)\t L1_DCM\t L2_DCM\n";
+				cout << endl << "Dimension\t Time(s)\t L1_DCM\t L2_DCM\t L1_ICM\t L2_ICM\n";
 
 				for (matDimension = 600; matDimension <= 3000; matDimension += matDimInc)
 				{
@@ -418,7 +425,9 @@ int main (int argc, char *argv[])
 					if (ret != PAPI_OK)
 						cout << "ERRO: Stop PAPI" << endl;
 					printf("%lld\t", values[0]);		// L1 DCM:
-					printf("%lld\n", values[1]);		// L2 DCM:
+					printf("%lld\t", values[1]);		// L2 DCM:
+					printf("%lld\t", values[2]);		// L1 ICM:
+					printf("%lld\n", values[3]);		// L2 ICM:
 
 					// ------  Reset PAPI Results  ------
 					ret = PAPI_reset( EventSet );
@@ -452,6 +461,31 @@ int main (int argc, char *argv[])
 				}
 				break;
 			case 4:
+				cout << endl << "Dimension\t Time(s)\t L1_DCM\t L2_DCM\n";
+				for (matDimension = 4000; matDimension <= 10000; matDimension += 2000)
+				{
+					// ------  Start counting  ------
+					ret = PAPI_start(EventSet);
+						if (ret != PAPI_OK) cout << "ERRO: Start PAPI" << endl;
+
+					cout << matDimension << "\t";
+
+					OnMultLine(matDimension, matDimension);
+
+					// ------  Print PAPI Results  ------
+					ret = PAPI_stop(EventSet, values);
+					if (ret != PAPI_OK)
+						cout << "ERRO: Stop PAPI" << endl;
+					printf("%lld\t", values[0]);		// L1 DCM:
+					printf("%lld\n", values[1]);		// L2 DCM:
+
+					// ------  Reset PAPI Results  ------
+					ret = PAPI_reset( EventSet );
+					if ( ret != PAPI_OK )
+						std::cout << "FAIL reset" << endl;
+				}
+				break;
+			case 5:
 				cout << "How many working threads?: ";
 				scanf("%d", &threadsCount);
 				if(threadsCount < 1)
