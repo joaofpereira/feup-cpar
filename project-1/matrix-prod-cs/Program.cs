@@ -45,6 +45,9 @@ namespace matrix_prod_cs
                     Console.Write(phc[j] + " ");
 
             Console.WriteLine();
+            
+            //Console.WriteLine("Matrix C\n");
+            //printMatrix(phc, m_ar, m_br);
         }
 
         public static void OnMultLine(int m_ar, int m_br)
@@ -52,43 +55,39 @@ namespace matrix_prod_cs
                 double[] pha = new double[m_ar*m_ar];
                 double[] phb = new double[m_br*m_br];
                 double[] phc = new double[m_ar*m_br];
-                
+
                 // initialize matrix values of matrix A
                 for(uint i = 0; i < m_ar; i++)
                     for(uint j = 0; j < m_ar; j++)
                         pha[i*m_ar + j] = 1.0;
-                
+
                 //Console.WriteLine("Matrix A\n");
                 //printMatrix(pha, m_ar, m_br);
-                
+
                 // initialize matrix values of matrix B
                 for(uint i = 0; i < m_br; i++)
                     for(uint j = 0; j < m_br; j++)
                         phb[i*m_br + j] = i + 1;
-                
+
                 //Console.WriteLine("Matrix B\n");
                 //printMatrix(phb, m_ar, m_br);
-                
+
                 var watch = System.Diagnostics.Stopwatch.StartNew();
-                
+
                 for(int i = 0; i < m_ar; i++)
                     for(int j = 0; j < m_br; j++)
                     {
-                        double sum = 0;
-                        
                         for(int k = 0; k < m_ar; k++)
                         {
-                            sum += pha[i*m_ar + j] * phb[i*m_ar + k];
+                            phc[i*m_ar + k] += pha[i*m_ar + j] * phb[j*m_br + k];
                         }
-                        
-                        phc[i*m_ar + j] = sum;
                     }
-                
+
                 watch.Stop();
 
                 double elapsedSeconds = watch.ElapsedMilliseconds / 1000.0;
                 Console.WriteLine("Time: {0:F3} seconds", elapsedSeconds);
-                
+
                 Console.WriteLine("Result matrix:");
 
                 for (uint i = 0; i < 1; i++)
@@ -96,11 +95,11 @@ namespace matrix_prod_cs
                         Console.Write(phc[j] + " ");
 
                 Console.WriteLine();
-                
+
                 //Console.WriteLine("Matrix C\n");
                 //printMatrix(phc, m_ar, m_br);
             }
-            
+
             public static void printMatrix(double[] matrix, int lines, int columns)
             {
                 for(int i = 0; i < columns; i++)
@@ -108,7 +107,7 @@ namespace matrix_prod_cs
                     for(int j = 0; j < lines; j++)
                     {
                         Console.Write(matrix[i*columns + j].ToString() + "  ");
-                    }   
+                    }
                     Console.WriteLine();
                 }
                 Console.WriteLine();
