@@ -9,6 +9,8 @@
 
 using namespace std;
 
+#define RUN_THREADS 4
+
 #define MIN_DIM 600
 #define MAX_DIM 3000
 #define SMALL_INTERVAL 400
@@ -126,7 +128,7 @@ int main (int argc, char *argv[])
 				cout << endl << "============  Multiplication Single thread  ============" << endl;
 				doMatrixMult(1, MIN_DIM, MAX_DIM, SMALL_INTERVAL, matrixOps, papiData, 1);
 				
-				for (threadsCount = 1; threadsCount <= nthreads; threadsCount++) {
+				for (threadsCount = 1; threadsCount <= RUN_THREADS; threadsCount++) {
 					cout << endl << "============  Multiplication " << threadsCount << " thread(s) (OpenMP)  ============" << endl;
 					doMatrixMult(2, MIN_DIM, MAX_DIM, SMALL_INTERVAL, matrixOps, papiData, threadsCount);
 				}
@@ -135,7 +137,7 @@ int main (int argc, char *argv[])
 				doMatrixMult(3, MIN_DIM, MAX_DIM, SMALL_INTERVAL, matrixOps, papiData, 1);
 				doMatrixMult(4, BIG_MIN_DIM, BIG_MAX_DIM, BIG_INTERVAL, matrixOps, papiData, 1);
 				
-				for (threadsCount = 1; threadsCount <= nthreads; threadsCount++) {
+				for (threadsCount = 1; threadsCount <= RUN_THREADS; threadsCount++) {
 					cout << endl << "============  Multiplication V2 " << threadsCount << " thread(s) (OpenMP)  ============" << endl;
 					doMatrixMult(5, MIN_DIM, MAX_DIM, SMALL_INTERVAL, matrixOps, papiData, threadsCount);
 				}
