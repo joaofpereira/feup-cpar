@@ -38,14 +38,14 @@ namespace matrix_prod_cs
             double elapsedSeconds = watch.ElapsedMilliseconds / 1000.0;
             Console.WriteLine("Time: {0:F3} seconds", elapsedSeconds);
 
-            Console.WriteLine("Result matrix:");
+            /*Console.WriteLine("Result matrix:");
 
             for (uint i = 0; i < 1; i++)
                 for (uint j = 0; j < Math.Min(10, m_br); j++)
                     Console.Write(phc[j] + " ");
 
-            Console.WriteLine();
-            
+            Console.WriteLine();*/
+
             //Console.WriteLine("Matrix C\n");
             //printMatrix(phc, m_ar, m_br);
         }
@@ -88,13 +88,13 @@ namespace matrix_prod_cs
                 double elapsedSeconds = watch.ElapsedMilliseconds / 1000.0;
                 Console.WriteLine("Time: {0:F3} seconds", elapsedSeconds);
 
-                Console.WriteLine("Result matrix:");
+                /*Console.WriteLine("Result matrix:");
 
                 for (uint i = 0; i < 1; i++)
                     for (uint j = 0; j < Math.Min(10, m_br); j++)
                         Console.Write(phc[j] + " ");
 
-                Console.WriteLine();
+                Console.WriteLine();*/
 
                 //Console.WriteLine("Matrix C\n");
                 //printMatrix(phc, m_ar, m_br);
