@@ -18,9 +18,9 @@ MatrixOps::~MatrixOps() {
 void MatrixOps::printElapsedTime(int omp)
 {
 	if(omp == 1)
-		sprintf(st, "%3.3f\t", (double)(time4 - time3));		// Print elapsed time for OMP version
+		sprintf(st, "%3.3f;", (double)(time4 - time3));		// Print elapsed time for OMP version
 	else
-		sprintf(st, "%3.3f\t", (double)(time2 - time1) / CLOCKS_PER_SEC);		// Print elapsed time
+		sprintf(st, "%3.3f;", (double)(time2 - time1) / CLOCKS_PER_SEC);		// Print elapsed time
 	cout << st;
 }
 
@@ -37,7 +37,7 @@ void MatrixOps::printMatrix(double *matrix, int dim)
 
 void MatrixOps::printStats(double *matrix, int dim, int omp)
 {
-	cout << dim << "\t";
+	cout << dim << ";";
 	printElapsedTime(omp);
 	printMatrix(matrix, dim);
 }
@@ -45,11 +45,11 @@ void MatrixOps::printStats(double *matrix, int dim, int omp)
 float MatrixOps::produtoInterno(float *v1, float *v2, int col)
 {
 	int i;
-	float soma = 0.0;	
+	float soma = 0.0;
 
 	for(i=0; i<col; i++)
 		soma += v1[i]*v2[i];
-	
+
 	return(soma);
 }
 
@@ -74,13 +74,13 @@ void MatrixOps::freeAllMatrix()
 {
 	free(pha);		// Free Matrix A allocated Memory
 	free(phb);		// Free Matrix B allocated Memory
-	free(phc);		// Free Matrix C allocated Memory	
+	free(phc);		// Free Matrix C allocated Memory
 }
 
-void MatrixOps::OnMult(int m_ar, int m_br) 
+void MatrixOps::OnMult(int m_ar, int m_br)
 {
 	allocAllMatrix(m_ar, m_br);
-	
+
 	// -------------------  Matrix Prod (A.B = C)  -------------------------------
 
 	time1 = clock();		// Start Clock counting
@@ -97,24 +97,24 @@ void MatrixOps::OnMult(int m_ar, int m_br)
 	}
 
 	time2 = clock();		// Stop Clock counting
-	
+
 	// -------------------  Print Results  ---------------------------------------
 	printStats(phc, m_br, 0);
 
 	freeAllMatrix();
 }
 
-void MatrixOps::OnMult_OMP(int m_ar, int m_br, int threads) 
+void MatrixOps::OnMult_OMP(int m_ar, int m_br, int threads)
 {
 	int i, j, k;
 	double temp;
 
 	allocAllMatrix(m_ar, m_br);
-	
+
 	omp_set_num_threads(threads);	// Apply working threads
 
 	// -------------------  Matrix Prod (A.B = C)  -------------------------------
-	
+
 	time3 = omp_get_wtime();		// Start Clock counting
 
 	for(i=0; i<m_ar; i++) {
@@ -130,7 +130,7 @@ void MatrixOps::OnMult_OMP(int m_ar, int m_br, int threads)
 	}
 
 	time4 = omp_get_wtime();		// Stop Clock counting
-	
+
 	// -------------------  Print Results  ---------------------------------------
 	printStats(phc, m_br, 1);
 
@@ -155,7 +155,7 @@ void MatrixOps::OnMultLine(int m_ar, int m_br)
 	}
 
 	time2 = clock();		// Stop Clock counting
-	
+
 	// -------------------  Print Results  ---------------------------------------
 	printStats(phc, m_br, 0);
 
@@ -167,7 +167,7 @@ void MatrixOps::OnMultLine_OMP(int m_ar, int m_br, int threads)
 	int i, j, k;
 
 	allocAllMatrix(m_ar, m_br);
-	
+
 	omp_set_num_threads(threads);	// Apply working threads
 
 	// -------------------  Matrix Prod (A.B = C)  -------------------------------
@@ -185,7 +185,7 @@ void MatrixOps::OnMultLine_OMP(int m_ar, int m_br, int threads)
 	}
 
 	time4 = omp_get_wtime();		// Stop Clock counting
-	
+
 	// -------------------  Print Results  ---------------------------------------
 	printStats(phc, m_br, 1);
 
