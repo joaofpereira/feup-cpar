@@ -56,8 +56,8 @@ void sequencialSieve(vector<bool>& list) {
 
 	for (unsigned int p = 2; pow(p, 2) < list.size();) {
 
-		for (unsigned int i = 2; i * p < list.size(); i++)
-			list[i * p] = false;
+		for (unsigned int i = pow(p, 2); i < list.size(); i += p)
+			list[i] = false;
 
 		do {
 			p++;
@@ -80,7 +80,7 @@ void openMPSieve(vector<bool>& list, int threads) {
 	for (unsigned int p = 2; pow(p, 2) < list.size();) {
 			#pragma omp parallel for
 			for (unsigned int i = pow(p, 2); i < list.size(); i += p)
-				list[i * p] = false;
+				list[i] = false;
 
 		do {
 			p++;
@@ -172,6 +172,8 @@ void openMPMode(bool automatic) {
 		openMPSieve(list, threadsCount);
 
 		out << (double) (singleCoreTime[1] - singleCoreTime[0]) << ";";
+
+		printPrimesList(list);
 	}
 
 	out.close();
