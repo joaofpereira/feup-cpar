@@ -25,6 +25,12 @@ void printPrimesList(const vector<bool>& list) {
 	out.clear();
 }
 
+void printList(const vector<bool>& list) {
+	for (auto elem : list)
+		cout << elem;
+	cout << endl;
+}
+
 vector<bool> newList(unsigned int n) {
 	return vector<bool>(n, true);
 }
@@ -171,12 +177,6 @@ void openMPMode(bool automatic) {
 	out.close();
 }
 
-void printList(const vector<bool>& list) {
-	for (auto elem : list)
-		cout << elem;
-	cout << endl;
-}
-
 void printSingleCoreMenu() {
 	int option;
 
@@ -249,7 +249,7 @@ int main() {
 
 		case 2:
 			cout << endl;
-			cout << "OpenMP -  shared memory system" << endl;
+			openMPMode(false);
 			break;
 
 		case 3:
