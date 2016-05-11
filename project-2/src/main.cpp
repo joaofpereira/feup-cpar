@@ -14,6 +14,17 @@ using namespace std;
 static double singleCoreTime[2]; // start and end time
 static double openMPTime[2]; // start and end time
 
+void printPrimesList(const vector<bool>& list) {
+	ofstream out;
+	out.open("primes-list.txt");
+
+	for (unsigned int i = 0; i < list.size(); i++)
+		if(list[i])
+			out << i << endl;
+
+	out.clear();
+}
+
 vector<bool> newList(unsigned int n) {
 	return vector<bool>(n, true);
 }
@@ -110,6 +121,8 @@ void sequentialMode(bool automatic) {
 
 		out << (double) (singleCoreTime[1] - singleCoreTime[0]) / CLOCKS_PER_SEC
 				<< ";";
+
+		printPrimesList(list);
 	}
 
 	out.close();
@@ -219,7 +232,7 @@ void printMenu() {
 	cout << "Option: ";
 }
 
-int main(int argc, char **argv) {
+int main() {
 	int option;
 
 	do {
