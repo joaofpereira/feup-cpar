@@ -25,6 +25,19 @@ void printPrimesList(const bool* list, unsigned long size) {
 	out.clear();
 }
 
+/*void printOptimizedPrimesList(const bool* list, unsigned long size) {
+	ofstream out;
+	out.open("primes-list.txt");
+
+	out << "2" << endl;
+
+	for (unsigned long i = 3; i < size; i += 2)
+		if (list[i])
+			out << i << endl;
+
+	out.clear();
+}*/
+
 void printList(const vector<bool>& list) {
 	for (auto elem : list)
 		cout << elem;
@@ -38,6 +51,17 @@ bool* newList(unsigned long n) {
 
 	return list;
 }
+
+/*bool* newOptimizedList(unsigned long n) {
+	bool* list = (bool*) malloc(n * sizeof(bool));
+
+	for (unsigned long i = 3; i < n; i += 2)
+		list[i] = true;
+
+	list[2] = true;
+
+	return list;
+}*/
 
 int askForWorkingThreads(int maxThreads) {
 	int threadsCount;
@@ -73,6 +97,18 @@ void sequencialSieve(bool* list, unsigned long size) {
 
 	singleCoreTime[1] = clock();		// Stop Clock counting
 }
+
+/*void optimizedSequencialSieve(bool* list, unsigned long size) {
+	singleCoreTime[0] = clock();		// Start Clock counting
+
+	for (unsigned long p = 3; p * p <= size; p += 2) {
+		if (list[p])
+			for (unsigned long i = p * p; i <= size; i += p)
+				list[i] = false;
+	}
+
+	singleCoreTime[1] = clock();		// Stop Clock counting
+}*/
 
 void openMPSieve(bool* list, unsigned long size, int& threads) {
 
