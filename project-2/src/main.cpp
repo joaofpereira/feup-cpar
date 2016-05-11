@@ -6,8 +6,8 @@
 #include <time.h>
 #include <omp.h>
 
-#define MIN 2
-#define MAX 5
+#define MIN 25
+#define MAX 32
 
 using namespace std;
 
@@ -18,8 +18,8 @@ void printPrimesList(const vector<bool>& list) {
 	ofstream out;
 	out.open("primes-list.txt");
 
-	for (unsigned int i = 0; i < list.size(); i++)
-		if(list[i])
+	for (unsigned long i = 0; i < list.size(); i++)
+		if (list[i])
 			out << i << endl;
 
 	out.clear();
@@ -31,12 +31,14 @@ void printList(const vector<bool>& list) {
 	cout << endl;
 }
 
-vector<bool> newList(unsigned int n) {
+vector<bool> newList(unsigned long n) {
 	return vector<bool>(n, true);
 }
 
 int askForWorkingThreads(int maxThreads) {
 	int threadsCount;
+
+	cout << "MAX: " << maxThreads << endl;
 
 	cout << "How many working threads?: ";
 	cin >> threadsCount;
@@ -54,9 +56,9 @@ void sequencialSieve(vector<bool>& list) {
 	list[0] = false;
 	list[1] = false;
 
-	for (unsigned int p = 2; pow(p, 2) < list.size();) {
+	for (unsigned long p = 2; pow(p, 2) < list.size();) {
 
-		for (unsigned int i = pow(p, 2); i < list.size(); i += p)
+		for (unsigned long i = pow(p, 2); i < list.size(); i += p)
 			list[i] = false;
 
 		do {
@@ -68,7 +70,7 @@ void sequencialSieve(vector<bool>& list) {
 	singleCoreTime[1] = clock();		// Stop Clock counting
 }
 
-void openMPSieve(vector<bool>& list, int threads) {
+void openMPSieve(vector<bool>& list, int& threads) {
 
 	omp_set_num_threads(threads);	// Apply working threads
 
@@ -77,10 +79,10 @@ void openMPSieve(vector<bool>& list, int threads) {
 	list[0] = false;
 	list[1] = false;
 
-	for (unsigned int p = 2; pow(p, 2) < list.size();) {
-			#pragma omp parallel for
-			for (unsigned int i = pow(p, 2); i < list.size(); i += p)
-				list[i] = false;
+	for (unsigned long p = 2; pow(p, 2) < list.size();) {
+#pragma omp parallel for
+		for (unsigned long i = pow(p, 2); i < list.size(); i += p)
+			list[i] = false;
 
 		do {
 			p++;
@@ -116,7 +118,7 @@ void sequentialMode(bool automatic) {
 	}
 
 	else {
-		unsigned int n;
+		unsigned long n;
 
 		cout << "Insert a number to find the primes: ";
 		cin >> n;
@@ -146,6 +148,10 @@ void openMPMode(bool automatic) {
 
 	// ------  Some Infos  ------
 	int nthreads = omp_get_max_threads();
+	int ncpus = omp_get_num_procs();
+	cout << nthreads << " Thread(s) available(s)." << endl;
+	cout << ncpus << " CPU(s) available(s)." << endl;
+
 	int threadsCount = askForWorkingThreads(nthreads);
 
 	ofstream out;
@@ -156,13 +162,13 @@ void openMPMode(bool automatic) {
 			list = newList(pow(2, i));
 			openMPSieve(list, threadsCount);
 
-			out << i << ";" << (double) (singleCoreTime[1] - singleCoreTime[0])
+			out << i << ";" << (double) (openMPTime[1] - openMPTime[0])
 					<< endl;
 		}
 	}
 
 	else {
-		unsigned int n;
+		unsigned long n;
 
 		cout << "Insert a number to find the primes: ";
 		cin >> n;
@@ -171,7 +177,7 @@ void openMPMode(bool automatic) {
 
 		openMPSieve(list, threadsCount);
 
-		out << (double) (singleCoreTime[1] - singleCoreTime[0]) << ";";
+		out << (double) (openMPTime[1] - openMPTime[0]) << ";";
 
 		printPrimesList(list);
 	}
