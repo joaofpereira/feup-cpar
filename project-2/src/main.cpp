@@ -11,8 +11,8 @@
 
 using namespace std;
 
-static int singleCoreTime[2]; // start and end time
-static int openMPTime[2]; // start and end time
+static double singleCoreTime[2]; // start and end time
+static double openMPTime[2]; // start and end time
 
 vector<bool> newList(unsigned int n) {
 	return vector<bool>(n, true);
@@ -22,7 +22,7 @@ int askForWorkingThreads(int maxThreads) {
 	int threadsCount;
 
 	cout << "How many working threads?: ";
-	scanf("%d", &threadsCount);
+	cin >> threadsCount;
 	if (threadsCount < 1)
 		threadsCount = 1;
 	else if (threadsCount > maxThreads)
@@ -52,6 +52,7 @@ void sequencialSieve(vector<bool>& list) {
 }
 
 void openMPSieve(vector<bool>& list, int threads) {
+
 	omp_set_num_threads(threads);	// Apply working threads
 
 	openMPTime[0] = omp_get_wtime();		// Start Clock counting
@@ -59,13 +60,10 @@ void openMPSieve(vector<bool>& list, int threads) {
 	list[0] = false;
 	list[1] = false;
 
-	unsigned int i;
-
 	for (unsigned int p = 2; pow(p, 2) < list.size();) {
-
-#pragma omp parallel for
-		for (i = 2; i * p < list.size(); i++)
-			list[i * p] = false;
+			#pragma omp parallel for
+			for (unsigned int i = pow(p, 2); i < list.size(); i += p)
+				list[i * p] = false;
 
 		do {
 			p++;
