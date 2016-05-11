@@ -1,13 +1,24 @@
 #include <algorithm>
 #include <cmath>
 #include <iostream>
+#include <fstream>
 #include <vector>
+#include <time.h>
+#include <omp.h>
+
+#define MIN 2
+#define MAX 5
 
 using namespace std;
+
+static int singleCoreTime[2]; // start and end time
+static int openMPTime[2]; // start and end time
 
 void sieve(vector<bool>& list) {
 	list[0] = false;
 	list[1] = false;
+
+	singleCoreTime[0] = clock();		// Start Clock counting
 
 	for (unsigned int p = 2; pow(p, 2) < list.size();) {
 
@@ -19,6 +30,8 @@ void sieve(vector<bool>& list) {
 		} while (!list[p] && pow(p, 2) < list.size());
 
 	}
+
+	singleCoreTime[1] = clock();		// Start Clock counting
 }
 
 vector<bool> newList(unsigned int n) {
@@ -31,17 +44,77 @@ void printList(const vector<bool>& list) {
 	cout << endl;
 }
 
-void sequentialMode() {
-	unsigned int n;
+void sequentialMode(bool automatic) {
 
-	cout << "Insert a number to find the primes: ";
-	cin >> n;
+	cout << endl;
+	cout << "---------------" << endl;
+	cout << "Single CPU-core" << endl;
+	cout << "---------------" << endl;
+	cout << endl;
 
-	vector<bool> list = newList(n);
+	ofstream out;
+	out.open("single-core.txt");
 
-	sieve(list);
+	if (automatic) {
+		for (unsigned int i = MIN; i <= MAX; i++) {
+			vector<bool> list = newList(pow(2, i));
+			sieve(list);
 
-	printList(list);
+			out << i << ";" << (double) (singleCoreTime[1] - singleCoreTime[0]) / CLOCKS_PER_SEC << endl;
+		}
+	}
+
+	else {
+		unsigned int n;
+
+		cout << "Insert a number to find the primes: ";
+		cin >> n;
+
+		vector<bool> list = newList(n);
+
+		sieve(list);
+
+		out << (double) (singleCoreTime[1] - singleCoreTime[0]) / CLOCKS_PER_SEC << ";";
+	}
+
+	out.close();
+}
+
+void printSingleCoreMenu() {
+	int option;
+
+	do {
+		cout << endl;
+		cout << "Single Core Mode:" << endl;
+		cout << "  1. Manually" << endl;
+		cout << "  2. Automatic" << endl;
+		cout << endl;
+
+		cout << "  0. Exit" << endl;
+		cout << endl;
+
+		cout << "Option: ";
+
+		cin >> option;
+
+		switch (option) {
+		case 0:
+			break;
+		case 1:
+			sequentialMode(false);
+			break;
+
+		case 2:
+			sequentialMode(true);
+			break;
+
+		default:
+			cout << endl;
+			cout << "Invalid option! Try again..." << endl;
+			break;
+		}
+
+	} while (option != 0);
 }
 
 void printMenu() {
@@ -74,14 +147,7 @@ int main(int argc, char **argv) {
 			break;
 
 		case 1:
-			cout << endl;
-			cout << "---------------" << endl;
-			cout << "Single CPU-core" << endl;
-			cout << "---------------" << endl;
-			cout << endl;
-
-			sequentialMode();
-
+			printSingleCoreMenu();
 			break;
 
 		case 2:
