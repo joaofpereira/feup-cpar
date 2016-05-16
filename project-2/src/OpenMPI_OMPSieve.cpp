@@ -1,10 +1,12 @@
-#include "OpenMPISieve.h"
+#include "OpenMPI_OMPSieve.h"
 
-double openMPISieve(unsigned long n) {
+double openMPI_OMPSieve(unsigned long n, int threads) {
 	int rank, size;
 	double openMPITime = 0;
 	bool* list;
 	unsigned long startBlockValue, counter = 0, primes = 0;
+
+	omp_set_num_threads(threads);
 
 	MPI_Comm_size(MPI_COMM_WORLD, &size);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -19,7 +21,7 @@ double openMPISieve(unsigned long n) {
 
 	MPI_Barrier (MPI_COMM_WORLD);
 
-	if(rank == 0) {
+	if (rank == 0) {
 		openMPITime = -MPI_Wtime();
 		//cout << "Start Time: " << openMPITime << endl << endl;
 	}
@@ -40,6 +42,7 @@ double openMPISieve(unsigned long n) {
 		}
 
 		// mark the multiples of each prime
+#pragma omp parallel for
 		for (unsigned long i = startBlockValue; i <= highValue; i += p)
 			list[i - lowValue] = false;
 
@@ -53,7 +56,7 @@ double openMPISieve(unsigned long n) {
 		MPI_Bcast(&p, 1, MPI_LONG, 0, MPI_COMM_WORLD);
 	}
 
-	if(rank == 0) {
+	if (rank == 0) {
 		openMPITime += MPI_Wtime();
 		cout << "Total Time: " << openMPITime << endl << endl;
 	}
@@ -77,11 +80,13 @@ double openMPISieve(unsigned long n) {
 }
 
 int main(int argc, char** argv) {
+
 	MPI_Init(&argc, &argv);
 
 	unsigned long n = (unsigned long) atol(argv[1]);
+	int threads = (int) atoi(argv[2]);
 
-	openMPISieve(n);
+	openMPI_OMPSieve(n, threads);
 
 	MPI_Finalize();
 

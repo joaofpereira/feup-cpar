@@ -120,6 +120,7 @@ void openMPIMode(bool automatic) {
 
 	unsigned long size;
 	unsigned int numProc;
+	stringstream mpirun;
 
 	cout << endl;
 	cout << "---------------" << endl;
@@ -127,31 +128,147 @@ void openMPIMode(bool automatic) {
 	cout << "---------------" << endl;
 	cout << endl;
 
-	cout << endl << "MPI number of proccesses: ";
+	cout << endl << "MPI number of processes: ";
 	cin >> numProc;
 
 	while (numProc != 1 && numProc != 2 && numProc != 3 && numProc != 4) {
 		cout << endl
-				<< "MPI number of proccesses wrong, please enter again in the range (1-4)\n";
-		cout << endl << "MPI number of proccesses: ";
+				<< "MPI number of processes wrong, please enter again in the range (1-4)\n";
+		cout << endl << "MPI number of processes: ";
 		cin >> numProc;
 	}
 
-	cout << "Insert a number to find the primes: ";
-	cin >> size;
+	if (automatic) {
+		for (unsigned int i = MIN; i <= MAX; i++) {
+			size = pow(2, i);
 
-	for (unsigned int i = 1; i <= numProc; i++) {
-		stringstream mpirun;
+			cout << "Numbers: " << size << endl;
+
+			mpirun << "mpirun -np ";
+			mpirun << numProc;
+			mpirun << " SieveMPI ";
+			mpirun << size;
+
+			cout << "String: " << mpirun.str() << endl;
+
+			cout << endl << "Results For 2^" << i << " Numbers: " << endl;
+
+			system(mpirun.str().c_str());
+
+			mpirun.clear();
+			mpirun.str("");
+		}
+	} else {
+		cout << "Insert a number to find the primes: ";
+		cin >> size;
 
 		mpirun << "mpirun -np ";
-		mpirun << i;
+		mpirun << numProc;
 		mpirun << " SieveMPI ";
 		mpirun << size;
 
-		cout << endl << "Results For " << i << " Processes: " << endl;
-
-		cout << endl << system(mpirun.str().c_str());
+		system(mpirun.str().c_str());
 	}
+}
+
+void openMPI_OMPMode(bool automatic) {
+
+	unsigned long size;
+	unsigned int numProc;
+	stringstream mpirun;
+	int nthreads, ncpus, threadsCount;
+
+	cout << endl;
+	cout << "---------------" << endl;
+	cout << "OpenMPI & OpenMP Mode" << endl;
+	cout << "---------------" << endl;
+	cout << endl;
+
+	// asking for the number of threads
+	nthreads = omp_get_max_threads();
+	ncpus = omp_get_num_procs();
+	cout << nthreads << " Thread(s) available(s)." << endl;
+	cout << ncpus << " CPU(s) available(s)." << endl;
+
+	threadsCount = askForWorkingThreads(nthreads);
+
+	// asking for the number of processes
+	cout << endl << "MPI number of processes: ";
+	cin >> numProc;
+
+	while (numProc != 1 && numProc != 2 && numProc != 3 && numProc != 4) {
+		cout << endl
+				<< "MPI number of processes wrong, please enter again in the range (1-4)\n";
+		cout << endl << "MPI number of processes: ";
+		cin >> numProc;
+	}
+
+	if (automatic) {
+		for (unsigned int i = MIN; i <= MAX; i++) {
+			size = pow(2, i);
+
+			mpirun << "mpirun -np ";
+			mpirun << numProc;
+			mpirun << " SieveMPI_OMP ";
+			mpirun << size << " ";
+			mpirun << threadsCount;
+
+			cout << endl << "Results For 2^" << i << " Numbers: " << endl;
+
+			system(mpirun.str().c_str());
+
+			mpirun.clear();
+			mpirun.str("");
+		}
+	} else {
+		cout << "Insert a number to find the primes: ";
+		cin >> size;
+
+		mpirun << "mpirun -np ";
+		mpirun << numProc;
+		mpirun << " SieveMPI_OMP ";
+		mpirun << size << " ";
+		mpirun << threadsCount;
+
+		system(mpirun.str().c_str());
+	}
+}
+
+void openMPI_OMPMenu() {
+	int option;
+
+	do {
+		cout << endl;
+		cout << "OPENMPI & OPENMP Mode:" << endl;
+		cout << "  1. Manually" << endl;
+		cout << "  2. Automatic" << endl;
+		cout << endl;
+
+		cout << "  0. Exit" << endl;
+		cout << endl;
+
+		cout << "Option: ";
+
+		cin >> option;
+
+		switch (option) {
+		case 0:
+			break;
+		case 1:
+			openMPI_OMPMode(false);
+			break;
+
+		case 2:
+			openMPI_OMPMode(true);
+			break;
+
+		default:
+			cout << endl;
+			cout << "Invalid option! Try again..." << endl;
+			break;
+		}
+
+	} while (option != 0);
 }
 
 void openMPIMenu() {
@@ -274,7 +391,7 @@ void printMenu() {
 	cout << "Parallel Mode:" << endl;
 	cout << "  2. OpenMP - shared memory system" << endl;
 	cout << "  3. MPI - distributed memory system" << endl;
-	cout << "  4. MPI - shared memory system" << endl;
+	cout << "  4. MPI and OpenMP - shared memory system" << endl;
 	cout << endl;
 
 	cout << "0. Exit" << endl;
@@ -310,7 +427,7 @@ int main() {
 
 		case 4:
 			cout << endl;
-			cout << "MPI - shared memory system" << endl;
+			openMPI_OMPMenu();
 			break;
 
 		default:

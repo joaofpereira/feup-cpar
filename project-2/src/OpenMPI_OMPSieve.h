@@ -1,8 +1,9 @@
-#ifndef OPENMPISIEVE_H
-#define OPENMPISIEVE_H
+#ifndef OPENMPIOMPSIEVE_H
+#define OPENMPIOMPSIEVE_H
 
 #include <iostream>
 #include <mpi.h>
+#include <omp.h>
 #include <cmath>
 #include <cstdlib>
 
@@ -15,6 +16,6 @@
 
 using namespace std;
 
-double openMPISieve(unsigned long n);
+double openMPI_OMPSieve(unsigned long n, int threads);
 
 #endif
