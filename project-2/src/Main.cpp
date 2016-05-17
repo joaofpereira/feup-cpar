@@ -153,10 +153,7 @@ void openMPIMode(bool automatic, bool distributed) {
 
 			cout << endl << "Results For 2^" << i << " Numbers: " << endl;
 
-			if(system(mpirun.str().c_str()))
-				cout << endl << "OK!" << endl;
-			else
-				cerr << endl << "Invoking system failure!" << endl;
+			system(mpirun.str().c_str());
 
 			mpirun.clear();
 			mpirun.str("");
@@ -170,10 +167,7 @@ void openMPIMode(bool automatic, bool distributed) {
 		mpirun << " SieveMPI ";
 		mpirun << size;
 
-		if(system(mpirun.str().c_str()))
-			cout << endl << "OK!" << endl;
-		else
-			cerr << endl << "Invoking system failure!" << endl;
+		system(mpirun.str().c_str());
 	} else {
 		cout << "Insert a number to find the primes: ";
 		cin >> size;
@@ -183,10 +177,7 @@ void openMPIMode(bool automatic, bool distributed) {
 		mpirun << " SieveMPI ";
 		mpirun << size;
 
-		if(system(mpirun.str().c_str()))
-			cout << endl << "OK!" << endl;
-		else
-			cerr << endl << "Invoking system failure!" << endl;
+		system(mpirun.str().c_str());
 	}
 }
 
@@ -234,10 +225,7 @@ void openMPI_OMPMode(bool automatic, bool distributed) {
 
 			cout << endl << "Results For 2^" << i << " Numbers: " << endl;
 
-			if(system(mpirun.str().c_str()))
-				cout << endl << "OK!" << endl;
-			else
-				cerr << endl << "Invoking system failure!" << endl;
+			system(mpirun.str().c_str());
 
 			mpirun.clear();
 			mpirun.str("");
@@ -252,10 +240,7 @@ void openMPI_OMPMode(bool automatic, bool distributed) {
 		mpirun << size << " ";
 		mpirun << threadsCount;
 
-		if(system(mpirun.str().c_str()))
-			cout << endl << "OK!" << endl;
-		else
-			cerr << endl << "Invoking system failure!" << endl;
+		system(mpirun.str().c_str());
 
 	} else {
 		cout << "Insert a number to find the primes: ";
@@ -267,10 +252,7 @@ void openMPI_OMPMode(bool automatic, bool distributed) {
 		mpirun << size << " ";
 		mpirun << threadsCount;
 
-		if(system(mpirun.str().c_str()))
-			cout << endl << "OK!" << endl;
-		else
-			cerr << endl << "Invoking system failure!" << endl;
+		system(mpirun.str().c_str());
 	}
 }
 
