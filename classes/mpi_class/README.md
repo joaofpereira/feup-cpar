@@ -2,7 +2,9 @@
    A configuracao e ao nivel do utilizador
 
 a) Se nao existir o directorio ~/.ssh   cria-lo.
+
 b) cd ~/.ssh
+
 c) ssh-keygen -t dsa
    at prompt, hit enter, saving file as id_dsa
    at the prompts, hit enter (2x) when asked for a passphrase
