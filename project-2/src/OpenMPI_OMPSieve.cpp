@@ -1,6 +1,6 @@
 #include "OpenMPI_OMPSieve.h"
 
-double openMPI_OMPSieve(unsigned long n, int threads) {
+void openMPI_OMPSieve(unsigned long n, int threads) {
 	int rank, size;
 	double openMPITime = 0;
 	bool* list;
@@ -75,8 +75,6 @@ double openMPI_OMPSieve(unsigned long n, int threads) {
 	cout << "Primes: " << primes << endl;
 
 	free(list);
-
-	return openMPITime;
 }
 
 int main(int argc, char** argv) {

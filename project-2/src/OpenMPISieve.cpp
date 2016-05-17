@@ -1,6 +1,6 @@
 #include "OpenMPISieve.h"
 
-double openMPISieve(unsigned long n) {
+void openMPISieve(unsigned long n) {
 	int rank, size;
 	double openMPITime = 0;
 	bool* list;
@@ -72,8 +72,6 @@ double openMPISieve(unsigned long n) {
 	cout << "Primes: " << primes << endl;
 
 	free(list);
-
-	return openMPITime;
 }
 
 int main(int argc, char** argv) {

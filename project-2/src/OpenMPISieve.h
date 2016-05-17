@@ -15,6 +15,6 @@
 
 using namespace std;
 
-double openMPISieve(unsigned long n);
+void openMPISieve(unsigned long n);
 
 #endif

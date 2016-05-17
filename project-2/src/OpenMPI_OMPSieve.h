@@ -16,6 +16,6 @@
 
 using namespace std;
 
-double openMPI_OMPSieve(unsigned long n, int threads);
+void openMPI_OMPSieve(unsigned long n, int threads);
 
 #endif

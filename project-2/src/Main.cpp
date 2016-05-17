@@ -116,7 +116,7 @@ void openMPMode(bool automatic) {
 	out.close();
 }
 
-void openMPIMode(bool automatic) {
+void openMPIMode(bool automatic, bool distributed) {
 
 	unsigned long size;
 	unsigned int numProc;
@@ -138,7 +138,7 @@ void openMPIMode(bool automatic) {
 		cin >> numProc;
 	}
 
-	if (automatic) {
+	if (automatic && !distributed) {
 		for (unsigned int i = MIN; i <= MAX; i++) {
 			size = pow(2, i);
 
@@ -153,12 +153,15 @@ void openMPIMode(bool automatic) {
 
 			cout << endl << "Results For 2^" << i << " Numbers: " << endl;
 
-			system(mpirun.str().c_str());
+			if(system(mpirun.str().c_str()))
+				cout << endl << "OK!" << endl;
+			else
+				cerr << endl << "Invoking system failure!" << endl;
 
 			mpirun.clear();
 			mpirun.str("");
 		}
-	} else {
+	} else if (!automatic && !distributed) {
 		cout << "Insert a number to find the primes: ";
 		cin >> size;
 
@@ -167,11 +170,27 @@ void openMPIMode(bool automatic) {
 		mpirun << " SieveMPI ";
 		mpirun << size;
 
-		system(mpirun.str().c_str());
+		if(system(mpirun.str().c_str()))
+			cout << endl << "OK!" << endl;
+		else
+			cerr << endl << "Invoking system failure!" << endl;
+	} else {
+		cout << "Insert a number to find the primes: ";
+		cin >> size;
+
+		mpirun << "mpirun --hostfile hostfile -np ";
+		mpirun << numProc;
+		mpirun << " SieveMPI ";
+		mpirun << size;
+
+		if(system(mpirun.str().c_str()))
+			cout << endl << "OK!" << endl;
+		else
+			cerr << endl << "Invoking system failure!" << endl;
 	}
 }
 
-void openMPI_OMPMode(bool automatic) {
+void openMPI_OMPMode(bool automatic, bool distributed) {
 
 	unsigned long size;
 	unsigned int numProc;
@@ -203,7 +222,7 @@ void openMPI_OMPMode(bool automatic) {
 		cin >> numProc;
 	}
 
-	if (automatic) {
+	if (automatic && !distributed) {
 		for (unsigned int i = MIN; i <= MAX; i++) {
 			size = pow(2, i);
 
@@ -215,12 +234,15 @@ void openMPI_OMPMode(bool automatic) {
 
 			cout << endl << "Results For 2^" << i << " Numbers: " << endl;
 
-			system(mpirun.str().c_str());
+			if(system(mpirun.str().c_str()))
+				cout << endl << "OK!" << endl;
+			else
+				cerr << endl << "Invoking system failure!" << endl;
 
 			mpirun.clear();
 			mpirun.str("");
 		}
-	} else {
+	} else if (!automatic && !distributed){
 		cout << "Insert a number to find the primes: ";
 		cin >> size;
 
@@ -230,7 +252,25 @@ void openMPI_OMPMode(bool automatic) {
 		mpirun << size << " ";
 		mpirun << threadsCount;
 
-		system(mpirun.str().c_str());
+		if(system(mpirun.str().c_str()))
+			cout << endl << "OK!" << endl;
+		else
+			cerr << endl << "Invoking system failure!" << endl;
+
+	} else {
+		cout << "Insert a number to find the primes: ";
+		cin >> size;
+
+		mpirun << "mpirun --hostfile hostfile -np ";
+		mpirun << numProc;
+		mpirun << " SieveMPI_OMP ";
+		mpirun << size << " ";
+		mpirun << threadsCount;
+
+		if(system(mpirun.str().c_str()))
+			cout << endl << "OK!" << endl;
+		else
+			cerr << endl << "Invoking system failure!" << endl;
 	}
 }
 
@@ -242,6 +282,7 @@ void openMPI_OMPMenu() {
 		cout << "OPENMPI & OPENMP Mode:" << endl;
 		cout << "  1. Manually" << endl;
 		cout << "  2. Automatic" << endl;
+		cout << "  3. Distributed System" << endl;
 		cout << endl;
 
 		cout << "  0. Exit" << endl;
@@ -255,13 +296,14 @@ void openMPI_OMPMenu() {
 		case 0:
 			break;
 		case 1:
-			openMPI_OMPMode(false);
+			openMPI_OMPMode(false, false);
 			break;
-
 		case 2:
-			openMPI_OMPMode(true);
+			openMPI_OMPMode(true, false);
 			break;
-
+		case 3:
+			openMPI_OMPMode(false, true);
+			break;
 		default:
 			cout << endl;
 			cout << "Invalid option! Try again..." << endl;
@@ -279,6 +321,7 @@ void openMPIMenu() {
 		cout << "OPENMPI Mode:" << endl;
 		cout << "  1. Manually" << endl;
 		cout << "  2. Automatic" << endl;
+		cout << "  3. Distributed System" << endl;
 		cout << endl;
 
 		cout << "  0. Exit" << endl;
@@ -292,13 +335,14 @@ void openMPIMenu() {
 		case 0:
 			break;
 		case 1:
-			openMPIMode(false);
+			openMPIMode(false, false);
 			break;
-
 		case 2:
-			openMPIMode(true);
+			openMPIMode(true, false);
 			break;
-
+		case 3:
+			openMPIMode(false, true);
+			break;
 		default:
 			cout << endl;
 			cout << "Invalid option! Try again..." << endl;
