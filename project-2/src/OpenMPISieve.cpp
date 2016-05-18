@@ -19,10 +19,8 @@ void openMPISieve(unsigned long n) {
 
 	MPI_Barrier (MPI_COMM_WORLD);
 
-	if(rank == 0) {
+	if(rank == 0)
 		openMPITime = -MPI_Wtime();
-		//cout << "Start Time: " << openMPITime << endl << endl;
-	}
 
 	/*cout << "Rank: " << rank << endl;
 	 cout << "Low Value: " << lowValue << endl;
