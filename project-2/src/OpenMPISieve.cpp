@@ -1,10 +1,10 @@
 #include "OpenMPISieve.h"
 
-void openMPISieve(unsigned long n, ofstream& out) {
+void openMPISieve(unsigned long power, ofstream& out) {
 	int rank, size;
 	double openMPITime = 0;
 	bool* list;
-	unsigned long startBlockValue, counter = 0, primes = 0;
+	unsigned long startBlockValue, counter = 0, primes = 0, n = pow(2, power);
 
 	MPI_Comm_size(MPI_COMM_WORLD, &size);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -20,8 +20,8 @@ void openMPISieve(unsigned long n, ofstream& out) {
 	MPI_Barrier (MPI_COMM_WORLD);
 
 	if(rank == 0) {
+		out << size << ";" << n << ";" << power << ";";
 		openMPITime = -MPI_Wtime();
-		out << size << ";" << n << ";";
 	}
 
 	for (unsigned long p = 2; pow(p, 2) <= n;) {
@@ -76,11 +76,13 @@ int main(int argc, char** argv) {
 
 	MPI_Init(&argc, &argv);
 
-	unsigned long n = pow(2, (unsigned long) atol(argv[1]));
+	unsigned long n = (unsigned long) atol(argv[1]);
 
 	openMPISieve(n, out);
 
 	MPI_Finalize();
+
+	out.close();
 
 	return 0;
 }
