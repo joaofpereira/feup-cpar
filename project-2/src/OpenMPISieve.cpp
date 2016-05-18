@@ -1,6 +1,6 @@
 #include "OpenMPISieve.h"
 
-void openMPISieve(unsigned long n) {
+void openMPISieve(unsigned long n, ofstream& out) {
 	int rank, size;
 	double openMPITime = 0;
 	bool* list;
@@ -19,13 +19,10 @@ void openMPISieve(unsigned long n) {
 
 	MPI_Barrier (MPI_COMM_WORLD);
 
-	if(rank == 0)
+	if(rank == 0) {
 		openMPITime = -MPI_Wtime();
-
-	/*cout << "Rank: " << rank << endl;
-	 cout << "Low Value: " << lowValue << endl;
-	 cout << "High Value: " << highValue << endl;
-	 cout << "Block Size: " << blockSize << endl;*/
+		out << size << ";" << n << ";";
+	}
 
 	for (unsigned long p = 2; pow(p, 2) <= n;) {
 		// calculate the start block value to each process
@@ -53,7 +50,7 @@ void openMPISieve(unsigned long n) {
 
 	if(rank == 0) {
 		openMPITime += MPI_Wtime();
-		cout << "Total Time: " << openMPITime << endl << endl;
+		out << openMPITime << ";";
 	}
 
 	// count all the primes
@@ -67,17 +64,21 @@ void openMPISieve(unsigned long n) {
 	else
 		primes = counter;
 
-	cout << "Primes: " << primes << endl;
+	if(rank == 0)
+		out << primes << endl;
 
 	free(list);
 }
 
 int main(int argc, char** argv) {
+	ofstream out;
+  	out.open ("openmpi.csv", ios::app);
+
 	MPI_Init(&argc, &argv);
 
-	unsigned long n = (unsigned long) atol(argv[1]);
+	unsigned long n = pow(2, (unsigned long) atol(argv[1]));
 
-	openMPISieve(n);
+	openMPISieve(n, out);
 
 	MPI_Finalize();
 

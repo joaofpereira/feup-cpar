@@ -24,11 +24,6 @@ void openMPI_OMPSieve(unsigned long n, int threads) {
 	if (rank == 0)
 		openMPITime = -MPI_Wtime();
 
-	/*cout << "Rank: " << rank << endl;
-	 cout << "Low Value: " << lowValue << endl;
-	 cout << "High Value: " << highValue << endl;
-	 cout << "Block Size: " << blockSize << endl;*/
-
 	for (unsigned long p = 2; pow(p, 2) <= n;) {
 		// calculate the start block value to each process
 		if (pow(p, 2) < lowValue) {

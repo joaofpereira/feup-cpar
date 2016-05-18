@@ -11,3 +11,10 @@ SieveMPI_OMP:
 
 clean:
 	rm -r Sieve SieveMPI SieveMPI_OMP
+
+pc1:
+	for p in 1 2 4; do \
+		for n in 25 26 27 28 29 30 31 32; do \
+			mpirun --hostfile hostfile1 -np $$p SieveMPI $$n ; \
+		done; \
+	done; \

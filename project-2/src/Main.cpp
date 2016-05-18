@@ -116,7 +116,7 @@ void openMPMode(bool automatic) {
 	out.close();
 }
 
-void openMPIMode(bool automatic, bool distributed) {
+void openMPIMode() {
 
 	unsigned long size;
 	unsigned int numProc;
@@ -131,54 +131,15 @@ void openMPIMode(bool automatic, bool distributed) {
 	cout << endl << "MPI number of processes: ";
 	cin >> numProc;
 
-	while (numProc != 1 && numProc != 2 && numProc != 3 && numProc != 4) {
-		cout << endl
-				<< "MPI number of processes wrong, please enter again in the range (1-4)\n";
-		cout << endl << "MPI number of processes: ";
-		cin >> numProc;
-	}
+	cout << "Insert a number to find the primes: ";
+	cin >> size;
 
-	if (automatic && !distributed) {
-		for (unsigned int i = MIN; i <= MAX; i++) {
-			size = pow(2, i);
+	mpirun << "mpirun --hostfile hostfile -np ";
+	mpirun << numProc;
+	mpirun << " SieveMPI ";
+	mpirun << size;
 
-			cout << "Numbers: " << size << endl;
-
-			mpirun << "mpirun -np ";
-			mpirun << numProc;
-			mpirun << " SieveMPI ";
-			mpirun << size;
-
-			cout << "String: " << mpirun.str() << endl;
-
-			cout << endl << "Results For 2^" << i << " Numbers: " << endl;
-
-			system(mpirun.str().c_str());
-
-			mpirun.clear();
-			mpirun.str("");
-		}
-	} else if (!automatic && !distributed) {
-		cout << "Insert a number to find the primes: ";
-		cin >> size;
-
-		mpirun << "mpirun -np ";
-		mpirun << numProc;
-		mpirun << " SieveMPI ";
-		mpirun << size;
-
-		system(mpirun.str().c_str());
-	} else {
-		cout << "Insert a number to find the primes: ";
-		cin >> size;
-
-		mpirun << "mpirun --hostfile hostfile -np ";
-		mpirun << numProc;
-		mpirun << " SieveMPI ";
-		mpirun << size;
-
-		system(mpirun.str().c_str());
-	}
+	system(mpirun.str().c_str());
 }
 
 void openMPI_OMPMode(bool automatic, bool distributed) {
@@ -205,13 +166,6 @@ void openMPI_OMPMode(bool automatic, bool distributed) {
 	// asking for the number of processes
 	cout << endl << "MPI number of processes: ";
 	cin >> numProc;
-
-	while (numProc != 1 && numProc != 2 && numProc != 3 && numProc != 4) {
-		cout << endl
-				<< "MPI number of processes wrong, please enter again in the range (1-4)\n";
-		cout << endl << "MPI number of processes: ";
-		cin >> numProc;
-	}
 
 	if (automatic && !distributed) {
 		for (unsigned int i = MIN; i <= MAX; i++) {
@@ -302,8 +256,6 @@ void openMPIMenu() {
 		cout << endl;
 		cout << "OPENMPI Mode:" << endl;
 		cout << "  1. Manually" << endl;
-		cout << "  2. Automatic" << endl;
-		cout << "  3. Distributed System" << endl;
 		cout << endl;
 
 		cout << "  0. Exit" << endl;
@@ -317,14 +269,7 @@ void openMPIMenu() {
 		case 0:
 			break;
 		case 1:
-			openMPIMode(false, false);
-			break;
-		case 2:
-			openMPIMode(true, false);
-			break;
-		case 3:
-			openMPIMode(false, true);
-			break;
+			openMPIMode();
 		default:
 			cout << endl;
 			cout << "Invalid option! Try again..." << endl;
