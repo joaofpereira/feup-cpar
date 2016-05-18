@@ -1,10 +1,10 @@
 #include "OpenMPI_OMPSieve.h"
 
-void openMPI_OMPSieve(unsigned long n, int threads) {
+void openMPI_OMPSieve(unsigned long power, int threads, ofstream& out) {
 	int rank, size;
 	double openMPITime = 0;
 	bool* list;
-	unsigned long startBlockValue, counter = 0, primes = 0;
+	unsigned long startBlockValue, counter = 0, primes = 0, n = pow(2, power);
 
 	omp_set_num_threads(threads);
 
@@ -21,8 +21,10 @@ void openMPI_OMPSieve(unsigned long n, int threads) {
 
 	MPI_Barrier (MPI_COMM_WORLD);
 
-	if (rank == 0)
+	if (rank == 0) {
+		out << size << ";" << n << ";" << power << ";" << threads << ";";
 		openMPITime = -MPI_Wtime();
+	}
 
 	for (unsigned long p = 2; pow(p, 2) <= n;) {
 		// calculate the start block value to each process
@@ -51,7 +53,7 @@ void openMPI_OMPSieve(unsigned long n, int threads) {
 
 	if (rank == 0) {
 		openMPITime += MPI_Wtime();
-		cout << "Total Time: " << openMPITime << endl << endl;
+		out << openMPITime << ";";
 	}
 
 	// count all the primes
@@ -65,21 +67,27 @@ void openMPI_OMPSieve(unsigned long n, int threads) {
 	else
 		primes = counter;
 
-	cout << "Primes: " << primes << endl;
+	if(rank == 0)
+		out << primes << endl;
 
 	free(list);
 }
 
 int main(int argc, char** argv) {
+	ofstream out;
+  	out.open ("openmpiomp.csv", ios::app);
 
 	MPI_Init(&argc, &argv);
 
-	unsigned long n = (unsigned long) atol(argv[1]);
+	unsigned long power = (unsigned long) atol(argv[1]);
+
 	int threads = (int) atoi(argv[2]);
 
-	openMPI_OMPSieve(n, threads);
+	openMPI_OMPSieve(power, threads, out);
 
 	MPI_Finalize();
+
+	out.close();
 
 	return 0;
 }

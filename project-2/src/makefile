@@ -20,15 +20,58 @@ pc1:
 	done; \
 
 pc2:
-	for p in 8; do \
+	for p in 2 3 4 5 6 7 8; do \
 		for n in 25 26 27 28 29 30 31 32; do \
 			mpirun --hostfile hostfile2 -np $$p SieveMPI $$n ; \
 		done; \
 	done; \
 
 pc3:
-	for p in 16; do \
+	for p in 4 5 6 7 8 9 10 11 12 13 14 15 16; do \
 		for n in 25 26 27 28 29 30 31 32; do \
 			mpirun --hostfile hostfile3 -np $$p SieveMPI $$n ; \
+		done; \
+	done; \
+
+pc4:
+	for p in 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32; do \
+		for n in 25 26 27 28 29 30 31 32; do \
+			mpirun --hostfile hostfile4 -np $$p SieveMPI $$n ; \
+		done; \
+	done; \
+
+opc1:
+	for t in 1 2 3 4 5 6 7 8; do \
+		for p in 4; do \
+			for n in 25 26 27 28 29 30 31 32; do \
+				mpirun --hostfile hostfile1 -np $$p SieveMPI_OMP $$n $$t; \
+			done; \
+		done; \
+	done; \
+
+opc2:
+	for t in 1 2 3 4 5 6 7 8; do \
+		for p in 2 3 4 5 6 7 8; do \
+			for n in 25 26 27 28 29 30 31 32; do \
+				mpirun --hostfile hostfile2 -np $$p SieveMPI_OMP $$n $$t; \
+			done; \
+		done; \
+	done; \
+
+opc3:
+	for t in 1 2 3 4 5 6 7 8; do \
+		for p in 4 5 6 7 8 9 10 11 12 13 14 15 16; do \
+			for n in 25 26 27 28 29 30 31 32; do \
+				mpirun --hostfile hostfile3 -np $$p SieveMPI_OMP $$n $$t; \
+			done; \
+		done; \
+	done; \
+
+opc4:
+	for t in 1 2 3 4 5 6 7 8; do \
+		for p in 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32; do \
+			for n in 25 26 27 28 29 30 31 32; do \
+				mpirun --hostfile hostfile4 -np $$p SieveMPI_OMP $$n $$t; \
+			done; \
 		done; \
 	done; \

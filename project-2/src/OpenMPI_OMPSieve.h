@@ -2,6 +2,7 @@
 #define OPENMPIOMPSIEVE_H
 
 #include <iostream>
+#include <fstream>
 #include <mpi.h>
 #include <omp.h>
 #include <cmath>

@@ -142,7 +142,7 @@ void openMPIMode() {
 	system(mpirun.str().c_str());
 }
 
-void openMPI_OMPMode(bool automatic, bool distributed) {
+void openMPI_OMPMode() {
 
 	unsigned long size;
 	unsigned int numProc;
@@ -167,47 +167,17 @@ void openMPI_OMPMode(bool automatic, bool distributed) {
 	cout << endl << "MPI number of processes: ";
 	cin >> numProc;
 
-	if (automatic && !distributed) {
-		for (unsigned int i = MIN; i <= MAX; i++) {
-			size = pow(2, i);
 
-			mpirun << "mpirun -np ";
-			mpirun << numProc;
-			mpirun << " SieveMPI_OMP ";
-			mpirun << size << " ";
-			mpirun << threadsCount;
+	cout << "Insert a number to find the primes: ";
+	cin >> size;
 
-			cout << endl << "Results For 2^" << i << " Numbers: " << endl;
+	mpirun << "mpirun --hostfile hostfile -np ";
+	mpirun << numProc;
+	mpirun << " SieveMPI_OMP ";
+	mpirun << size << " ";
+	mpirun << threadsCount;
 
-			system(mpirun.str().c_str());
-
-			mpirun.clear();
-			mpirun.str("");
-		}
-	} else if (!automatic && !distributed){
-		cout << "Insert a number to find the primes: ";
-		cin >> size;
-
-		mpirun << "mpirun -np ";
-		mpirun << numProc;
-		mpirun << " SieveMPI_OMP ";
-		mpirun << size << " ";
-		mpirun << threadsCount;
-
-		system(mpirun.str().c_str());
-
-	} else {
-		cout << "Insert a number to find the primes: ";
-		cin >> size;
-
-		mpirun << "mpirun --hostfile hostfile -np ";
-		mpirun << numProc;
-		mpirun << " SieveMPI_OMP ";
-		mpirun << size << " ";
-		mpirun << threadsCount;
-
-		system(mpirun.str().c_str());
-	}
+	system(mpirun.str().c_str());
 }
 
 void openMPI_OMPMenu() {
@@ -217,8 +187,6 @@ void openMPI_OMPMenu() {
 		cout << endl;
 		cout << "OPENMPI & OPENMP Mode:" << endl;
 		cout << "  1. Manually" << endl;
-		cout << "  2. Automatic" << endl;
-		cout << "  3. Distributed System" << endl;
 		cout << endl;
 
 		cout << "  0. Exit" << endl;
@@ -232,13 +200,7 @@ void openMPI_OMPMenu() {
 		case 0:
 			break;
 		case 1:
-			openMPI_OMPMode(false, false);
-			break;
-		case 2:
-			openMPI_OMPMode(true, false);
-			break;
-		case 3:
-			openMPI_OMPMode(false, true);
+			openMPI_OMPMode();
 			break;
 		default:
 			cout << endl;
