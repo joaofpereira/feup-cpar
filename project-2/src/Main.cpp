@@ -24,7 +24,7 @@ void sequencialMode(bool automatic) {
 	cout << endl;
 
 	ofstream out;
-	out.open("single-core.txt");
+	out.open("single-core.csv");
 
 	if (automatic) {
 		for (unsigned int i = MIN; i <= MAX; i++) {
@@ -81,7 +81,7 @@ void openMPMode(bool automatic) {
 	int threadsCount = askForWorkingThreads(nthreads);
 
 	ofstream out;
-	out.open("openmp.txt");
+	out.open("openmp.csv");
 
 	if (automatic) {
 		for (unsigned int i = MIN; i <= MAX; i++) {
@@ -108,7 +108,7 @@ void openMPMode(bool automatic) {
 
 		out << (double) openMPSieve(list, size, threadsCount) << ";";
 
-		//printPrimesList(list, size);
+		printPrimesList(list, size);
 
 		free(list);
 	}
