@@ -1,0 +1,182 @@
+\documentclass[a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[portuguese]{babel}
+\usepackage{graphicx}
+\usepackage[hidelinks]{hyperref}
+
+\graphicspath{ {figures/} }
+
+\bibliography{references}
+
+\begin{titlepage}
+
+\begin{center}
+
+\title {
+
+\includegraphics[scale=0.5]{feup-logo.png}\linebreak\linebreak\linebreak
+
+\Huge\textbf{Paralelização do Algoritmo \textit{The Sieve of Eratosthenes}}\linebreak
+
+\Large\textbf{Relatório}\linebreak
+
+\Large{4º ano do Mestrado Integrado em Engenharia Informática e Computação}\linebreak\linebreak
+
+\Large\textbf{Computação Paralela}\linebreak
+}
+
+\large\author{
+
+\textbf{Elementos do grupo:}\\
+Henrique Manuel Martins Ferrolho - \href{https://sigarra.up.pt/feup/pt/fest_geral.cursos_list?pv_num_unico=201202772}{201202772} - \href{mailto:ei12079@fe.up.pt}{ei12079@fe.up.pt}\\
+João Filipe Figueiredo Pereira - \href{https://sigarra.up.pt/feup/pt/fest_geral.cursos_list?pv_num_unico=201104203}{201104203} - \href{mailto:ei12023@fe.up.pt}{ei12079@fe.up.pt}\\
+Leonel Jorge Nogueira Peixoto - \href{https://sigarra.up.pt/feup/pt/fest_geral.cursos_list?pv_num_unico=201204919}{201204919} - \href{mailto:ei12178@fe.up.pt}{ei12079@fe.up.pt}\linebreak\linebreak
+}
+
+\Large{Faculdade de Engenharia da Universidade do Porto \\ Rua Roberto Frias, s\/n, 4200-465 Porto, Portugal}\linebreak\linebreak\linebreak
+
+20 de Maio de 2016
+
+\end{center}
+
+\end{titlepage}
+
+\begin{document}
+
+\section{Introdução}
+ 
+No âmbito da Unidade Curricular de Computação Paralela foi proposto um estudo da paralelização do algoritmo \textit{The Sieve of Eratosthenes} através do uso de bibliotecas como OpenMP, para memória partilhada, e OpenMPI, para memória distribuída.\\
+Neste relatório é descrito o algoritmo proposto, e são discutidas algumas abordagens do mesmo utilizando paralelismo. São ainda apresentadas experiências do desempenho do algoritmo, assim como as suas avaliações e conclusões segundo algumas métricas.
+ 
+\section{Descrição do Problema}
+ 
+O problema em análise neste relatório é do cálculo de números primos num intervalo [2, $n$] : $n \in \mathbb{N} \setminus \{1\}$.
+Um número $j$ é considerado primo se for inteiro, superior a 1 e se tiver dois únicos divisores naturais distintos: os números 1 e $j$.
+ 
+\section{Algoritmo ``The Sieve of Eratosthenes''}
+ 
+Um dos algoritmos existentes para solucionar o problema descrito é o ``The Sieve of Eratosthenes'' \cite{michael2003parallel}.
+Este algoritmo opera sobre uma lista que contém todos os números inteiros no intervalo [2, $n$] e consiste na marcação de todos os múltiplos dos números primos que sejam inferiores ou iguais a $\sqrt{n}$.
+No final da sua execução, todos os números não marcados da lista correspondem aos números primos existentes no intervalo especificado (ver fig. \ref{fig:esquemaSieves} e pseudocódigo \ref{alg:sieve}).
+ 
+O algoritmo apresenta complexidade temporal $\mathcal{O}(n\ log\ log\ n)$ e complexidade espacial $\mathcal{O}(n)$ \cite{sieveGlossary}.
+ 
+\myfigure{!ht}{.6\textwidth}{sieves_figure.png}{Ilustração representativa do final da execução do algoritmo -- a amarelo encontram-se os números primos no intervalo [2, 100] e a cor-de-rosa os múltiplos excluídos destes.}{fig:esquemaSieves}
+ 
+\todo{Mudar imagem para outra a meio do algoritmo?}
+ 
+\myalgorithm {
+    \State {\small // Inicialização do vetor de inteiros no intervalo [2, $n$]}
+    \For{$i$ := 2 to $n$}
+        \State numbers[$i-1$] $\gets true$
+    \EndFor
+   
+    \State $k \gets 2$
+   
+    \While{$k^2 \leq n$}
+        \State {\small // Marcação dos múltiplos de $k$ (seed) no intervalo [$k^2$, $n$]}
+        \State $i \gets k^2$
+        \While{$i \leq n$}
+            \State numbers[$i-1$] $\gets false$
+            \State $i \gets i + k$
+        \EndWhile
+       
+        \State {\small // $k$ toma o valor do próximo número não marcado e superior a $k$}
+        \State $k \gets k+1$
+        \While{numbers[$k-1$] = $false$}
+            \State $k \gets k + 1$
+        \EndWhile
+    \EndWhile
+}
+{Algoritmo ``The Sieve of Eratosthenes''.} {alg:sieve}
+ 
+ 
+\section{Implementação do Algoritmo}
+ 
+Nesta secção encontra-se descrita as várias implementações do algoritmo, a serem estudadas na secção seguinte. Todas as implementações foram desenvolvidas com recurso à linguagem C++11.
+ 
+\subsection{Algoritmo Sequencial}
+ 
+A versão sequencial do algoritmo é uma implementação direta do pseudocódigo \ref{alg:sieve}.
+ 
+\subsection{Paralelização do Algoritmo}
+ 
+(autor) refere duas possíveis fontes de paralelismo no algoritmo:
+ 
+\begin{itemize}
+    \item Marcação dos múltiplos de $k$ no intervalo [$k^2$, $n$]
+    \item Determinação do menor número não marcado e superior a $k$ -- envolvendo uma redução
+\end{itemize}
+ 
+\subsubsection{Paralelismo com Memória Partilhada}
+ 
+Dizer aqui é com o openMP e como ele divide
+ 
+\subsubsection{Versão Paralelizada com Memória Distribuída}
+ 
+MPI e como ele divide
+ 
+\subsubsection{Versão Paralelizada Híbrida (com memória partilhada e distribuída)}
+ 
+e aqui o q foi feito
+ 
+\section{Experiências e Análise dos Resultados}
+ 
+\subsection{Descrição das Experiências e Metodologia de Avaliação}
+ 
+\todo{Dizer a metodologia toda}
+ 
+\todo{Que métricas? speedup, tempo?}
+ 
+Para avaliar as implementações do algoritmo descritas na secção anterior, foram feitas várias execuções experimentais, tendo sido medido o tempo de execução.
+Em todas as versões implementadas foram feitas execuções com $n = 2^i$, variando $i$ entre 25 e 32.
+Adicionalmente, no caso da versão com memória partilhada foram feitas experiências usando 2 a 8 \textit{threads} e na versão com memória distribuída foram lançados entre 1 a 16 processos (utilizando 4 computadores do laboratório ligados em rede, cada computador limitado no máximo a 4 processos -- dado que cada computador possui um processador \textit{quadcore}).
+ 
+Como medidas de avaliação de desempenho das implementações, foi o usado o $Speedup$ (onde $T_sequencial$ corresponde ao tempo de execução na versão sequencial, e $T_i$ corresponde ao tempo de execução na versão $i$) e o número de instruções por segundo (onde $T_i$ corresponde ao tempo de execução na versão $i$).
+ 
+\begin{equation}
+Speedup(i) = \frac{T_{sequencial}}{T_i}
+\end{equation}
+ 
+\begin{equation}
+OPS(i) = \frac{n\ log\ log\ n}{T_i}
+\end{equation}
+ 
+As experiências foram realizadas em \textit{Desktops} com um CPU Intel Core™ i7-4790 de frequência 3.60GHz (com ``Turbo Boost'' até 4.00GHz) com 4 \textit{cores}. O CPU apresenta 4 \textit{caches} de dados L1 de 32KB, 4 \textit{caches} de dados/instruções L2 de 256KB (uma por cada \textit{core}), bem como uma \textit{cache} de dados/instruções L3 de 8MB.
+ 
+\subsection{Análise dos Resultados}
+ 
+\subsubsection{Sequencial}
+ 
+\subsubsection{Memória Partilhada}
+ 
+\subsubsection{Memória Distribuída}
+ 
+\subsubsection{Cena híbrida}
+ 
+\mytable{!ht}
+{
+    \begin{tabular}{@{}rr@{}}
+    \toprule
+    \multicolumn{1}{l}{$2^N$} & \multicolumn{1}{l}{Tempo (s)} \\ \midrule
+    25 & 0.25 \\
+    26 & 0.54 \\
+    27 & 1.15 \\
+    28 & 2.51 \\
+    29 & 5.11 \\
+    30 & 10.58 \\
+    31 & 21.80 \\
+    32 & 44.99 \\ \bottomrule
+    \end{tabular}
+}{Tempos}{tab:seq}
+ 
+\todo{Gráficos, tabela com os tempos}
+ 
+\section{Conclusões}
+ 
+\todo{Conclusões gerais, que métodos foram melhores?}
+ 
+\printbibliography
+ 
+\end{document}
