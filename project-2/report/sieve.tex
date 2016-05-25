@@ -178,10 +178,9 @@ O código apresentado em \textbf{Algorithm \ref{alg:SequentialSieve}} pode ser e
 \subsection{Paralelização do Algoritmo}
  
 Uma das soluções para melhorar a \textit{perfomance} do algoritmo é paralelizar o mesmo. O paralelismo pode ser efetuado de duas formas: partilhando a memória pelo número de \textit{threads} disponíveis no processador (\textbf{OpenMP}); ou dividindo a estrutura de dados utilizada por diferentes processadores, o que possibilita, neste caso, que cada processo tenha memória local não partilhada com os restantes (\textbf{OpenMPI}).
+Para ambos os casos, o paralelismo tem de ser aplicado em blocos de código específicos do algoritmo. Paralelizar tudo não é concebível.
 
 Pode ainda utilizar-se um modelo híbrido com partilha e distribuição de memória.
-
-Para ambos os casos, o paralelismo tem de ser aplicado em blocos de código específicos do algoritmo. Paralelizar tudo não é concebível.
 
 \begin{algorithm}
 \caption{Bloco a paralelizar}
